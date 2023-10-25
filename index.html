@@ -37,19 +37,20 @@
     L.control.zoom({position: 'topright'}).addTo(map);
 
     var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-    var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
     
     var kauffmanAtlanta1921 = L.tileLayer('https://mapwarper.net/maps/tile/74063/{z}/{x}/{y}.png', {opacity: 1});
     var auburnAve1949 = L.tileLayer('https://mapwarper.net/maps/tile/5034/{z}/{x}/{y}.png');
-    
+    var atlantaWardMap1883 = L.tileLayer('https://mapwarper.net/maps/tile/77231/{z}/{x}/{y}.png'); // New layer
+
     osm.addTo(map);
-    auburnAve1949.addTo(map); // Default overlay layer is now Auburn
+    auburnAve1949.addTo(map);
 
     var overlayToggleButtons = L.control({position: 'bottomleft'});
     overlayToggleButtons.onAdd = function(map) {
         var div = L.DomUtil.create('div', 'info');
         div.innerHTML = '<button id="toggle-auburn" style="height: 4em;">Auburn Ave 1949 (On)</button><br>' +
-                        '<button id="toggle-kauffman" style="height: 4em;">Kauffman (Off)</button>';
+                        '<button id="toggle-kauffman" style="height: 4em;">Kauffman (Off)</button><br>' +
+                        '<button id="toggle-atlanta-ward" style="height: 4em;">1883 Atlanta Ward Map (Off)</button>'; // New button
         return div;
     };
     overlayToggleButtons.addTo(map);
@@ -71,6 +72,10 @@
 
     document.getElementById('toggle-auburn').addEventListener('click', function() {
         toggleOverlay(auburnAve1949, 'toggle-auburn', 'Auburn Ave 1949');
+    });
+
+    document.getElementById('toggle-atlanta-ward').addEventListener('click', function() {
+        toggleOverlay(atlantaWardMap1883, 'toggle-atlanta-ward', '1883 Atlanta Ward Map'); // New event listener
     });
 </script>
 </body>
