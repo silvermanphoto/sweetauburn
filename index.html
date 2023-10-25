@@ -18,6 +18,9 @@
         .leaflet-top.leaflet-left {
             padding: 40px;
         }
+        .selected {
+            background-color: yellow;
+        }
     </style>
 </head>
 <body>
@@ -43,49 +46,43 @@
         var overlayToggleButtons = L.control({position: 'bottomleft'});
         overlayToggleButtons.onAdd = function(map) {
             var div = L.DomUtil.create('div', 'info');
-            div.innerHTML = '<button id="toggle-kauffman" style="height: 3em;">1921 Kauffman Atlanta Map (Off)</button><br>' +
-                            '<button id="toggle-auburn" style="height: 3em;">1949 Auburn Avenue Orthophoto (On)</button><br>' +
-                            '<button id="toggle-atlanta-ward" style="height: 3em;">1883 Atlanta Ward Map (Off)</button><br>' +
-                            '<button id="toggle-current-year" style="height: 3em;">Current Year Google Map (Off)</button>';
+            div.innerHTML = '<button id="toggle-kauffman" style="height: 3em;">1921 Kauffman Atlanta Map</button><br>' +
+                            '<button id="toggle-auburn" style="height: 3em;">1949 Auburn Avenue Orthophoto</button><br>' +
+                            '<button id="toggle-atlanta-ward" style="height: 3em;">1883 Atlanta Ward Map</button><br>' +
+                            '<button id="toggle-current-year" style="height: 3em;">Current Year Google Map</button>';
             return div;
         };
         overlayToggleButtons.addTo(map);
 
-        function activateLayer(layer, buttonId, name) {
+        function activateLayer(layer, buttonId) {
             if (map.hasLayer(kauffmanAtlanta1921)) map.removeLayer(kauffmanAtlanta1921);
             if (map.hasLayer(auburnAve1949)) map.removeLayer(auburnAve1949);
             if (map.hasLayer(atlantaWardMap1883)) map.removeLayer(atlantaWardMap1883);
 
             layer.addTo(map);
-            
-            document.getElementById('toggle-kauffman').innerHTML = '1921 Kauffman Atlanta Map (Off)';
-            document.getElementById('toggle-auburn').innerHTML = '1949 Auburn Avenue Orthophoto (Off)';
-            document.getElementById('toggle-atlanta-ward').innerHTML = '1883 Atlanta Ward Map (Off)';
-            document.getElementById('toggle-current-year').innerHTML = 'Current Year Google Map (Off)';
-            
-            document.getElementById(buttonId).innerHTML = name + ' (On)';
+
+            document.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
+            document.getElementById(buttonId).classList.add('selected');
         }
 
         document.getElementById('toggle-kauffman').addEventListener('click', function() {
-            activateLayer(kauffmanAtlanta1921, 'toggle-kauffman', '1921 Kauffman Atlanta Map');
+            activateLayer(kauffmanAtlanta1921, 'toggle-kauffman');
         });
 
         document.getElementById('toggle-auburn').addEventListener('click', function() {
-            activateLayer(auburnAve1949, 'toggle-auburn', '1949 Auburn Avenue Orthophoto');
+            activateLayer(auburnAve1949, 'toggle-auburn');
         });
 
         document.getElementById('toggle-atlanta-ward').addEventListener('click', function() {
-            activateLayer(atlantaWardMap1883, 'toggle-atlanta-ward', '1883 Atlanta Ward Map');
+            activateLayer(atlantaWardMap1883, 'toggle-atlanta-ward');
         });
 
         document.getElementById('toggle-current-year').addEventListener('click', function() {
             if (map.hasLayer(kauffmanAtlanta1921)) map.removeLayer(kauffmanAtlanta1921);
             if (map.hasLayer(auburnAve1949)) map.removeLayer(auburnAve1949);
             if (map.hasLayer(atlantaWardMap1883)) map.removeLayer(atlantaWardMap1883);
-            document.getElementById('toggle-kauffman').innerHTML = '1921 Kauffman Atlanta Map (Off)';
-            document.getElementById('toggle-auburn').innerHTML = '1949 Auburn Avenue Orthophoto (Off)';
-            document.getElementById('toggle-atlanta-ward').innerHTML = '1883 Atlanta Ward Map (Off)';
-            document.getElementById('toggle-current-year').innerHTML = 'Current Year Google Map (On)';
+            document.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
+            document.getElementById('toggle-current-year').classList.add('selected');
         });
     </script>
 </body>
