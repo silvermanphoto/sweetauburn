@@ -18,15 +18,12 @@
         .leaflet-top.leaflet-left {
             padding: 40px;
         }
-        #opacity-slider {
-            width: 100px;
-        }
     </style>
 </head>
 <body>
     <div id="map"></div>
     
-<script>
+ <script>
     var latitude = 33.755515;
     var longitude = -84.377862;
 
@@ -37,45 +34,47 @@
     L.control.zoom({position: 'topright'}).addTo(map);
 
     var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-    
     var kauffmanAtlanta1921 = L.tileLayer('https://mapwarper.net/maps/tile/74063/{z}/{x}/{y}.png', {opacity: 1});
     var auburnAve1949 = L.tileLayer('https://mapwarper.net/maps/tile/5034/{z}/{x}/{y}.png');
-    var atlantaWardMap1883 = L.tileLayer('https://mapwarper.net/maps/tile/77231/{z}/{x}/{y}.png'); // New layer
+    var atlantaWardMap1883 = L.tileLayer('https://mapwarper.net/maps/tile/77231/{z}/{x}/{y}.png');
 
     osm.addTo(map);
-    auburnAve1949.addTo(map);
+    kauffmanAtlanta1921.addTo(map);
 
     var overlayToggleButtons = L.control({position: 'bottomleft'});
     overlayToggleButtons.onAdd = function(map) {
         var div = L.DomUtil.create('div', 'info');
-        div.innerHTML = '<button id="toggle-auburn" style="height: 4em;">Auburn Ave 1949 (On)</button><br>' +
-                        '<button id="toggle-kauffman" style="height: 4em;">Kauffman (Off)</button><br>' +
-                        '<button id="toggle-atlanta-ward" style="height: 4em;">1883 Atlanta Ward Map (Off)</button>'; // New button
+        div.innerHTML = '<button id="toggle-auburn" style="height: 3em;">1949 Auburn Avenue Orthophoto (Off)</button><br>' +
+                        '<button id="toggle-kauffman" style="height: 3em;">1921 Kauffman Atlanta Map (On)</button><br>' +
+                        '<button id="toggle-atlanta-ward" style="height: 3em;">1883 Atlanta Ward Map (Off)</button>';
         return div;
     };
     overlayToggleButtons.addTo(map);
 
-    function toggleOverlay(layer, buttonId, name) {
-        var button = document.getElementById(buttonId);
-        if (map.hasLayer(layer)) {
-            map.removeLayer(layer);
-            button.innerHTML = name + ' (Off)';
-        } else {
-            layer.addTo(map);
-            button.innerHTML = name + ' (On)';
-        }
+    function activateLayer(layer, buttonId, name) {
+        if (map.hasLayer(kauffmanAtlanta1921)) map.removeLayer(kauffmanAtlanta1921);
+        if (map.hasLayer(auburnAve1949)) map.removeLayer(auburnAve1949);
+        if (map.hasLayer(atlantaWardMap1883)) map.removeLayer(atlantaWardMap1883);
+        
+        layer.addTo(map);
+        
+        document.getElementById('toggle-kauffman').innerHTML = '1921 Kauffman Atlanta Map (Off)';
+        document.getElementById('toggle-auburn').innerHTML = '1949 Auburn Avenue Orthophoto (Off)';
+        document.getElementById('toggle-atlanta-ward').innerHTML = '1883 Atlanta Ward Map (Off)';
+        
+        document.getElementById(buttonId).innerHTML = name + ' (On)';
     }
 
     document.getElementById('toggle-kauffman').addEventListener('click', function() {
-        toggleOverlay(kauffmanAtlanta1921, 'toggle-kauffman', 'Kauffman');
+        activateLayer(kauffmanAtlanta1921, 'toggle-kauffman', '1921 Kauffman Atlanta Map');
     });
 
     document.getElementById('toggle-auburn').addEventListener('click', function() {
-        toggleOverlay(auburnAve1949, 'toggle-auburn', 'Auburn Ave 1949');
+        activateLayer(auburnAve1949, 'toggle-auburn', '1949 Auburn Avenue Orthophoto');
     });
 
     document.getElementById('toggle-atlanta-ward').addEventListener('click', function() {
-        toggleOverlay(atlantaWardMap1883, 'toggle-atlanta-ward', '1883 Atlanta Ward Map'); // New event listener
+        activateLayer(atlantaWardMap1883, 'toggle-atlanta-ward', '1883 Atlanta Ward Map');
     });
 </script>
 </body>
