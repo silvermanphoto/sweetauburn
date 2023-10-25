@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        .leaflet-top.leaflet-left {
+            padding: 40px;
+        }
+        #opacity-slider {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    
+ <script>
+    var latitude = 33.769046;
+    var longitude = -84.374100;
+
+    // Create the map
+    var map = L.map('map', {
+        zoomControl: false // Disable default zoom control
+    }).setView([latitude, longitude], 12);
+
+    // Add zoom controls manually
+    L.control.zoom({position: 'topright'}).addTo(map);
+
+    // Base Layers
+    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+    var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
+    
+    // Overlay Layers
+    var kauffmanAtlanta1921 = L.tileLayer('https://mapwarper.net/maps/tile/74063/{z}/{x}/{y}.png', {opacity: 1});
+    var summerhillSanborn1911 = L.tileLayer('https://mapwarper.net/maps/tile/74064/{z}/{x}/{y}.png');
+    var auburnAve1949 = L.tileLayer('https://mapwarper.net/maps/tile/5034/{z}/{x}/{y}.png');
+    
+    osm.addTo(map);
+    kauffmanAtlanta1921.addTo(map); // Default overlay layer
+
+    // Add Toggle Buttons for the Overlays with 2x height
+    var overlayToggleButtons = L.control({position: 'bottomleft'});
+    overlayToggleButtons.onAdd = function(map) {
+        var div = L.DomUtil.create('div', 'info');
+        div.innerHTML = '<button id="toggle-kauffman" style="height: 4em;">Kauffman (On)</button><br>' +
+                        '<button id="toggle-summerhill" style="height: 4em;">Summerhill Sanborn 1911 (Off)</button><br>' +
+                        '<button id="toggle-auburn" style="height: 4em;">Auburn Ave 1949 (Off)</button>';
+        return div;
+    };
+    overlayToggleButtons.addTo(map);
+
+    // Toggle function
+    function toggleOverlay(layer, buttonId, name) {
+        var button = document.getElementById(buttonId);
+        if (map.hasLayer(layer)) {
+            map.removeLayer(layer);
+            button.innerHTML = name + ' (Off)';
+        } else {
+            layer.addTo(map);
+            button.innerHTML = name + ' (On)';
+        }
+    }
+
+    document.getElementById('toggle-kauffman').addEventListener('click', function() {
+        toggleOverlay(kauffmanAtlanta1921, 'toggle-kauffman', 'Kauffman');
+    });
+
+    document.getElementById('toggle-summerhill').addEventListener('click', function() {
+        toggleOverlay(summerhillSanborn1911, 'toggle-summerhill', 'Summerhill Sanborn 1911');
+    });
+
+    document.getElementById('toggle-auburn').addEventListener('click', function() {
+        toggleOverlay(auburnAve1949, 'toggle-auburn', 'Auburn Ave 1949');
+    });
+</script>
+
+
+
+
+
+</body>
+</html>
