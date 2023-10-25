@@ -16,7 +16,7 @@
             height: 100%;
         }
         .leaflet-top.leaflet-left {
-            padding: 40px;
+            padding: 10px;
         }
         .selected {
             background-color: yellow;
@@ -34,7 +34,8 @@
             zoomControl: false
         }).setView([latitude, longitude], 16);
 
-        L.control.zoom({position: 'topright'}).addTo(map);
+        // Add zoom controls at the top left corner
+        L.control.zoom({position: 'topleft'}).addTo(map);
 
         var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
         osm.addTo(map);
@@ -43,7 +44,7 @@
         var auburnAve1949 = L.tileLayer('https://mapwarper.net/maps/tile/5034/{z}/{x}/{y}.png');
         var atlantaWardMap1883 = L.tileLayer('https://mapwarper.net/maps/tile/77231/{z}/{x}/{y}.png');
 
-        var overlayToggleButtons = L.control({position: 'bottomleft'});
+        var overlayToggleButtons = L.control({position: 'topleft'});
         overlayToggleButtons.onAdd = function(map) {
             var div = L.DomUtil.create('div', 'info');
             div.innerHTML = '<button id="toggle-kauffman" style="height: 3em;">1921 Kauffman Atlanta Map</button><br>' +
