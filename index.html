@@ -23,59 +23,70 @@
 <body>
     <div id="map"></div>
     
- <script>
-    var latitude = 33.755515;
-    var longitude = -84.377862;
+    <script>
+        var latitude = 33.755515;
+        var longitude = -84.377862;
 
-    var map = L.map('map', {
-        zoomControl: false
-    }).setView([latitude, longitude], 16);
+        var map = L.map('map', {
+            zoomControl: false
+        }).setView([latitude, longitude], 16);
 
-    L.control.zoom({position: 'topright'}).addTo(map);
+        L.control.zoom({position: 'topright'}).addTo(map);
 
-    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-    var kauffmanAtlanta1921 = L.tileLayer('https://mapwarper.net/maps/tile/74063/{z}/{x}/{y}.png', {opacity: 1});
-    var auburnAve1949 = L.tileLayer('https://mapwarper.net/maps/tile/5034/{z}/{x}/{y}.png');
-    var atlantaWardMap1883 = L.tileLayer('https://mapwarper.net/maps/tile/77231/{z}/{x}/{y}.png');
+        var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+        osm.addTo(map);
 
-    osm.addTo(map);
-    kauffmanAtlanta1921.addTo(map);
+        var kauffmanAtlanta1921 = L.tileLayer('https://mapwarper.net/maps/tile/74063/{z}/{x}/{y}.png', {opacity: 1});
+        var auburnAve1949 = L.tileLayer('https://mapwarper.net/maps/tile/5034/{z}/{x}/{y}.png');
+        var atlantaWardMap1883 = L.tileLayer('https://mapwarper.net/maps/tile/77231/{z}/{x}/{y}.png');
 
-    var overlayToggleButtons = L.control({position: 'bottomleft'});
-    overlayToggleButtons.onAdd = function(map) {
-        var div = L.DomUtil.create('div', 'info');
-        div.innerHTML = '<button id="toggle-auburn" style="height: 3em;">1949 Auburn Avenue Orthophoto (Off)</button><br>' +
-                        '<button id="toggle-kauffman" style="height: 3em;">1921 Kauffman Atlanta Map (On)</button><br>' +
-                        '<button id="toggle-atlanta-ward" style="height: 3em;">1883 Atlanta Ward Map (Off)</button>';
-        return div;
-    };
-    overlayToggleButtons.addTo(map);
+        var overlayToggleButtons = L.control({position: 'bottomleft'});
+        overlayToggleButtons.onAdd = function(map) {
+            var div = L.DomUtil.create('div', 'info');
+            div.innerHTML = '<button id="toggle-kauffman" style="height: 3em;">1921 Kauffman Atlanta Map (Off)</button><br>' +
+                            '<button id="toggle-auburn" style="height: 3em;">1949 Auburn Avenue Orthophoto (On)</button><br>' +
+                            '<button id="toggle-atlanta-ward" style="height: 3em;">1883 Atlanta Ward Map (Off)</button><br>' +
+                            '<button id="toggle-current-year" style="height: 3em;">Current Year Google Map (Off)</button>';
+            return div;
+        };
+        overlayToggleButtons.addTo(map);
 
-    function activateLayer(layer, buttonId, name) {
-        if (map.hasLayer(kauffmanAtlanta1921)) map.removeLayer(kauffmanAtlanta1921);
-        if (map.hasLayer(auburnAve1949)) map.removeLayer(auburnAve1949);
-        if (map.hasLayer(atlantaWardMap1883)) map.removeLayer(atlantaWardMap1883);
-        
-        layer.addTo(map);
-        
-        document.getElementById('toggle-kauffman').innerHTML = '1921 Kauffman Atlanta Map (Off)';
-        document.getElementById('toggle-auburn').innerHTML = '1949 Auburn Avenue Orthophoto (Off)';
-        document.getElementById('toggle-atlanta-ward').innerHTML = '1883 Atlanta Ward Map (Off)';
-        
-        document.getElementById(buttonId).innerHTML = name + ' (On)';
-    }
+        function activateLayer(layer, buttonId, name) {
+            if (map.hasLayer(kauffmanAtlanta1921)) map.removeLayer(kauffmanAtlanta1921);
+            if (map.hasLayer(auburnAve1949)) map.removeLayer(auburnAve1949);
+            if (map.hasLayer(atlantaWardMap1883)) map.removeLayer(atlantaWardMap1883);
 
-    document.getElementById('toggle-kauffman').addEventListener('click', function() {
-        activateLayer(kauffmanAtlanta1921, 'toggle-kauffman', '1921 Kauffman Atlanta Map');
-    });
+            layer.addTo(map);
+            
+            document.getElementById('toggle-kauffman').innerHTML = '1921 Kauffman Atlanta Map (Off)';
+            document.getElementById('toggle-auburn').innerHTML = '1949 Auburn Avenue Orthophoto (Off)';
+            document.getElementById('toggle-atlanta-ward').innerHTML = '1883 Atlanta Ward Map (Off)';
+            document.getElementById('toggle-current-year').innerHTML = 'Current Year Google Map (Off)';
+            
+            document.getElementById(buttonId).innerHTML = name + ' (On)';
+        }
 
-    document.getElementById('toggle-auburn').addEventListener('click', function() {
-        activateLayer(auburnAve1949, 'toggle-auburn', '1949 Auburn Avenue Orthophoto');
-    });
+        document.getElementById('toggle-kauffman').addEventListener('click', function() {
+            activateLayer(kauffmanAtlanta1921, 'toggle-kauffman', '1921 Kauffman Atlanta Map');
+        });
 
-    document.getElementById('toggle-atlanta-ward').addEventListener('click', function() {
-        activateLayer(atlantaWardMap1883, 'toggle-atlanta-ward', '1883 Atlanta Ward Map');
-    });
-</script>
+        document.getElementById('toggle-auburn').addEventListener('click', function() {
+            activateLayer(auburnAve1949, 'toggle-auburn', '1949 Auburn Avenue Orthophoto');
+        });
+
+        document.getElementById('toggle-atlanta-ward').addEventListener('click', function() {
+            activateLayer(atlantaWardMap1883, 'toggle-atlanta-ward', '1883 Atlanta Ward Map');
+        });
+
+        document.getElementById('toggle-current-year').addEventListener('click', function() {
+            if (map.hasLayer(kauffmanAtlanta1921)) map.removeLayer(kauffmanAtlanta1921);
+            if (map.hasLayer(auburnAve1949)) map.removeLayer(auburnAve1949);
+            if (map.hasLayer(atlantaWardMap1883)) map.removeLayer(atlantaWardMap1883);
+            document.getElementById('toggle-kauffman').innerHTML = '1921 Kauffman Atlanta Map (Off)';
+            document.getElementById('toggle-auburn').innerHTML = '1949 Auburn Avenue Orthophoto (Off)';
+            document.getElementById('toggle-atlanta-ward').innerHTML = '1883 Atlanta Ward Map (Off)';
+            document.getElementById('toggle-current-year').innerHTML = 'Current Year Google Map (On)';
+        });
+    </script>
 </body>
 </html>
