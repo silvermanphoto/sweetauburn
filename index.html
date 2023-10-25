@@ -34,7 +34,30 @@
 <body>
     <div id="map"></div>
     <script>
-        /* ... your existing JavaScript code ... */
+        var latitude = 33.755515;
+        var longitude = -84.377862;
+
+        var map = L.map('map', {
+            zoomControl: false
+        }).setView([latitude, longitude], 15);
+
+        L.control.zoom({position: 'topleft'}).addTo(map);
+
+        var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+        var kauffmanAtlanta1921 = L.tileLayer('https://mapwarper.net/maps/tile/74063/{z}/{x}/{y}.png');
+        var auburnAve1949 = L.tileLayer('https://mapwarper.net/maps/tile/5034/{z}/{x}/{y}.png');
+        var atlantaWard1883 = L.tileLayer('https://mapwarper.net/maps/tile/77231/{z}/{x}/{y}.png');
+
+        osm.addTo(map);
+        kauffmanAtlanta1921.addTo(map);
+
+        function updateMap(selectedLayer) {
+            map.eachLayer(function (layer) {
+                map.removeLayer(layer);
+            });
+            osm.addTo(map);
+            selectedLayer.addTo(map);
+        }
 
         var overlayToggleButtons = L.control({position: 'topleft'});
         overlayToggleButtons.onAdd = function(map) {
@@ -47,8 +70,26 @@
             return div;
         };
         overlayToggleButtons.addTo(map);
-        
-        /* ... your existing JavaScript code ... */
+
+        document.getElementById('toggle-kauffman').addEventListener('click', function() {
+            updateMap(kauffmanAtlanta1921);
+            this.className = 'selected';
+        });
+        document.getElementById('toggle-auburn').addEventListener('click', function() {
+            updateMap(auburnAve1949);
+            this.className = 'selected';
+        });
+        document.getElementById('toggle-atlanta-ward').addEventListener('click', function() {
+            updateMap(atlantaWard1883);
+            this.className = 'selected';
+        });
+        document.getElementById('toggle-current-year').addEventListener('click', function() {
+            map.eachLayer(function (layer) {
+                map.removeLayer(layer);
+            });
+            osm.addTo(map);
+            this.className = 'selected';
+        });
     </script>
 </body>
 </html>
